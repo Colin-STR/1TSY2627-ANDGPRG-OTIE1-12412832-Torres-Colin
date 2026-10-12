@@ -15,16 +15,15 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (player != null)
-        {
-            Vector3 direction = (player.position - transform.position).normalized;
-            direction.y = 0;
-            rb.MovePosition(transform.position + direction * speed * Time.fixedDeltaTime);
-            if (direction != Vector3.zero)
-            {
-                rb.MoveRotation(Quaternion.LookRotation(direction));
-            }
-        }
+        if (player == null) return;
+
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f;
+        direction.Normalize();
+        rb.linearVelocity = new Vector3(direction.x * speed, rb.linearVelocity.y, direction.z * speed);
+
+        if (direction != Vector3.zero)
+            rb.MoveRotation(Quaternion.LookRotation(direction));
     }
 
     public void TakeDamage(int damage)
