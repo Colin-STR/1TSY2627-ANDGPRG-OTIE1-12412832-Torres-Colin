@@ -448,6 +448,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   moveSpeed: 25
   edgeBoundary: 15
+  useClamping: 1
+  minX: 0
+  maxX: 60
+  minZ: -30
+  maxZ: 30
   zoomSpeed: 10
   minOrthographicSize: 5
   maxOrthographicSize: 25
