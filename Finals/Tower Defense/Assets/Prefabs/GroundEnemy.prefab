@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GroundEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8f23a49503d5bd74cb4ea5f27093f5b5, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8f23a49503d5bd74cb4ea5f27093f5b5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 57.05059
@@ -62,6 +66,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 8f23a49503d5bd74cb4ea5f27093f5b5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3237452606009275662}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 8f23a49503d5bd74cb4ea5f27093f5b5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1777997441942923779}
   m_SourcePrefab: {fileID: 100100000, guid: 8f23a49503d5bd74cb4ea5f27093f5b5, type: 3}
 --- !u!1 &2643600570017860638 stripped
 GameObject:
@@ -103,8 +110,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   enemyType: 0
-  baseHp: 100
+  baseHp: 75
   currentHp: 0
   baseGoldDrop: 10
   moveSpeed: 3.5
   flyingAltitude: 0
+--- !u!136 &-1777997441942923779
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2643600570017860638}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.58854455
+  m_Height: 3.5801256
+  m_Direction: 1
+  m_Center: {x: 7.141656e-10, y: 1.2900625, z: 0.08854455}

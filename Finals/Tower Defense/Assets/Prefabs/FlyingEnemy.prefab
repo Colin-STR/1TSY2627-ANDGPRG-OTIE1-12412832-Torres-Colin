@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlyingEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 100014, guid: bdc4cb55baef07b42ae2cd3c3ba8261b, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 400014, guid: bdc4cb55baef07b42ae2cd3c3ba8261b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.59342
@@ -30,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400014, guid: bdc4cb55baef07b42ae2cd3c3ba8261b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.6474
+      value: 2.518
       objectReference: {fileID: 0}
     - target: {fileID: 400014, guid: bdc4cb55baef07b42ae2cd3c3ba8261b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -71,6 +75,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100014, guid: bdc4cb55baef07b42ae2cd3c3ba8261b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8488880095611284049}
+    - targetCorrespondingSourceObject: {fileID: 100014, guid: bdc4cb55baef07b42ae2cd3c3ba8261b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3610655500952723211}
   m_SourcePrefab: {fileID: 100100000, guid: bdc4cb55baef07b42ae2cd3c3ba8261b, type: 3}
 --- !u!1 &5223588870968652828 stripped
 GameObject:
@@ -90,8 +97,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   enemyType: 1
-  baseHp: 80
+  baseHp: 50
   currentHp: 0
   baseGoldDrop: 10
   moveSpeed: 3.5
   flyingAltitude: 5
+--- !u!65 &3610655500952723211
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5223588870968652828}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.8354921, y: 2.42913, z: 2.173557}
+  m_Center: {x: 0.07778776, y: 0.7145647, z: 0.16279267}

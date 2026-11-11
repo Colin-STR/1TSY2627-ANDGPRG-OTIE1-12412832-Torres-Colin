@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public enum EnemyType { Ground, Flying, Boss }
 
@@ -18,6 +19,15 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent agent;
     private Transform targetCore;
     private int waveNumber;
+
+    private float originalSpeed;
+    private bool isSlowed = false;
+
+    void Awake()
+    {
+        NavMeshAgent nav = GetComponent<NavMeshAgent>();
+        if (nav != null) originalSpeed = nav.speed;
+    }
 
     public void Initialize(Transform core, float hpMultiplier, int wave)
     {
@@ -83,5 +93,41 @@ public class Enemy : MonoBehaviour
         int damage = (enemyType == EnemyType.Boss) ? 3 : 1;
         GameManager.Instance.DamageCore(damage);
         Destroy(gameObject);
+    }
+
+    public void ApplySlow(float slowMultiplier, float duration)
+    {
+        if (!isSlowed)
+        {
+            StartCoroutine(SlowRoutine(slowMultiplier, duration));
+        }
+    }
+
+    IEnumerator SlowRoutine(float multiplier, float duration)
+    {
+        isSlowed = true;
+        NavMeshAgent nav = GetComponent<NavMeshAgent>();
+        if (nav != null) nav.speed = originalSpeed * multiplier;
+
+        yield return new WaitForSeconds(duration);
+
+        if (nav != null) nav.speed = originalSpeed;
+        isSlowed = false;
+    }
+
+    public void ApplyBurn(float burnDamage, float duration)
+    {
+        StartCoroutine(BurnRoutine(burnDamage, duration));
+    }
+
+    IEnumerator BurnRoutine(float damagePerTick, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            TakeDamage(damagePerTick);
+            yield return new WaitForSeconds(1f);
+            elapsed += 1f;
+        }
     }
 }
