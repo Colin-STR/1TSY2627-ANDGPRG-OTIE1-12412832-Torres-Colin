@@ -12,42 +12,38 @@ public class TowerUpgrade : MonoBehaviour
     public float rangeMultiplier = 1.1f;
     public float fireRateMultiplier = 1.15f;
 
+    [Header("Visual Prefabs per Level")]
+    [Tooltip("Element 0 = Level 1, Element 1 = Level 2, Element 2 = Level 3")]
+    public GameObject[] levelModels;
+
     private TowerController controller;
-    private Renderer towerRenderer;
-    private Color originalColor;
+    private GameObject currentVisualModel;
 
     void Start()
     {
         controller = GetComponent<TowerController>();
-        towerRenderer = GetComponentInChildren<Renderer>();
-        if (towerRenderer != null)
-        {
-            originalColor = towerRenderer.material.color;
-        }
+        UpdateVisualModel();
     }
 
-    void OnMouseDown()
+    public int GetUpgradeCost()
     {
-        if (UnityEngine.EventSystems.EventSystem.current != null &&
-            UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-            return;
-
-        TryUpgradeTower();
+        if (level >= maxLevel) return 0;
+        return Mathf.RoundToInt(baseUpgradeCost * Mathf.Pow(1.5f, level - 1));
     }
 
-    public void TryUpgradeTower()
+    public bool CanUpgrade()
     {
-        if (level >= maxLevel)
-        {
-            Debug.Log($"{gameObject.name} is already at Max Level ({maxLevel}!)");
-            return;
-        }
+        return level < maxLevel;
+    }
 
-        int upgradeCost = Mathf.RoundToInt(baseUpgradeCost * Mathf.Pow(1.5f, level - 1));
+    public void UpgradeTower()
+    {
+        if (!CanUpgrade()) return;
 
-        if (GameManager.Instance.playerGold >= upgradeCost)
+        int cost = GetUpgradeCost();
+        if (GameManager.Instance.playerGold >= cost)
         {
-            GameManager.Instance.AddGold(-upgradeCost);
+            GameManager.Instance.AddGold(-cost);
             level++;
 
             if (controller != null)
@@ -55,24 +51,30 @@ public class TowerUpgrade : MonoBehaviour
                 controller.UpgradeStats(damageMultiplier, rangeMultiplier, fireRateMultiplier);
             }
 
-            Debug.Log($"{gameObject.name} upgraded to Level {level}! Cost was {upgradeCost} gold.");
-            StartCoroutine(FlashUpgradeEffect());
-        }
-        else
-        {
-            Debug.Log($"Not enough gold to upgrade! Need {upgradeCost} gold.");
+            UpdateVisualModel();
+
+            Debug.Log($"{gameObject.name} successfully upgraded to Level {level}!");
         }
     }
 
-    System.Collections.IEnumerator FlashUpgradeEffect()
+    private void UpdateVisualModel()
     {
-        if (towerRenderer != null)
+        if (currentVisualModel != null)
         {
-            towerRenderer.material.color = Color.cyan;
-            transform.localScale *= 1.1f;
-            yield return new WaitForSeconds(0.2f);
-            transform.localScale /= 1.1f;
-            towerRenderer.material.color = originalColor;
+            Destroy(currentVisualModel);
+        }
+
+        int index = level - 1;
+        if (levelModels != null && index >= 0 && index < levelModels.Length && levelModels[index] != null)
+        {
+            currentVisualModel = Instantiate(levelModels[index], transform);
+            currentVisualModel.transform.localPosition = Vector3.zero;
+            currentVisualModel.transform.localRotation = Quaternion.identity;
+          
+            foreach (Collider col in currentVisualModel.GetComponentsInChildren<Collider>())
+            {
+                Destroy(col);
+            }
         }
     }
 }
