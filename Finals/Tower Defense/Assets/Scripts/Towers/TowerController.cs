@@ -2,8 +2,15 @@ using UnityEngine;
 
 public class TowerController : MonoBehaviour
 {
+    [Header("Turret Rotation Settings")]
+    public bool rotatesToTarget = true;
+    public float turnSpeed = 10f;
+
     private TowerData data;
     private float fireCooldown = 0f;
+    private Transform currentTarget;
+    private Transform partToRotate;
+
     private float currentDamage;
     private float currentRange;
     private float currentFireRate;
@@ -17,6 +24,10 @@ public class TowerController : MonoBehaviour
         currentFireRate = data.fireRate;
         currentSplashRadius = data.splashRadius;
     }
+    public void SetRotatingPart(Transform visualTransform)
+    {
+        partToRotate = visualTransform;
+    }
 
     public void UpgradeStats(float dmgMult, float rangeMult, float speedMult)
     {
@@ -29,19 +40,23 @@ public class TowerController : MonoBehaviour
     void Update()
     {
         if (data == null) return;
+        UpdateTarget();
+
+        if (rotatesToTarget && currentTarget != null && partToRotate != null)
+        {
+            RotateTowardsTarget();
+        }
 
         fireCooldown -= Time.deltaTime;
-        if (fireCooldown <= 0f)
+        if (fireCooldown <= 0f && currentTarget != null)
         {
-            FindAndAttackTarget();
+            ExecuteAttack(currentTarget);
             fireCooldown = 1f / currentFireRate;
         }
     }
 
-    void FindAndAttackTarget()
+    void UpdateTarget()
     {
-        if (data == null) return;
-
         Collider[] hits = Physics.OverlapSphere(transform.position, currentRange);
         Transform bestTarget = null;
         float shortestDistance = Mathf.Infinity;
@@ -65,9 +80,17 @@ public class TowerController : MonoBehaviour
             }
         }
 
-        if (bestTarget != null)
+        currentTarget = bestTarget;
+    }
+
+    void RotateTowardsTarget()
+    {
+        Vector3 direction = currentTarget.position - partToRotate.position;
+        direction.y = 0f; 
+        if (direction.sqrMagnitude > 0.001f)
         {
-            ExecuteAttack(bestTarget);
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            partToRotate.rotation = Quaternion.Slerp(partToRotate.rotation, lookRotation, Time.deltaTime * turnSpeed);
         }
     }
 

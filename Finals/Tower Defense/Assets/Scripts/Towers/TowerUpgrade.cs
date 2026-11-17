@@ -70,11 +70,17 @@ public class TowerUpgrade : MonoBehaviour
             currentVisualModel = Instantiate(levelModels[index], transform);
             currentVisualModel.transform.localPosition = Vector3.zero;
             currentVisualModel.transform.localRotation = Quaternion.identity;
-          
             foreach (Collider col in currentVisualModel.GetComponentsInChildren<Collider>())
             {
                 Destroy(col);
             }
+        }
+        if (controller != null && currentVisualModel != null)
+        {
+            Transform rotatingPart = currentVisualModel.transform.Find("Turret");
+            if (rotatingPart == null) rotatingPart = currentVisualModel.transform;
+
+            controller.SetRotatingPart(rotatingPart);
         }
     }
 }
