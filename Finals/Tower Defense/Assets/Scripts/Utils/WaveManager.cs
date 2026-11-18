@@ -63,9 +63,15 @@ public class WaveManager : MonoBehaviour
                 {
                     Debug.Log("Final Wave Cleared! Victory!");
                     if (waveText != null) waveText.text = "Victory!";
+
                     if (AudioManager.Instance != null && AudioManager.Instance.victoryMusic != null)
                     {
-                        AudioManager.Instance.PlayBGM(AudioManager.Instance.victoryMusic, false); // false = don't loop victory music
+                        AudioManager.Instance.PlayBGM(AudioManager.Instance.victoryMusic, false);
+                    }
+
+                    if (GameManager.Instance != null)
+                    {
+                        GameManager.Instance.TriggerVictory();
                     }
                 }
             }

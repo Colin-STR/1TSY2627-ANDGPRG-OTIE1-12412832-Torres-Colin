@@ -22,6 +22,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip freezeSound;       
     public AudioClip enemyDeathSound;
     public AudioClip laserShootSound;
+    public AudioClip playerHitSound;
 
     void Awake()
     {
