@@ -6,11 +6,13 @@ public class TowerController : MonoBehaviour
     public bool rotatesToTarget = true;
     public float turnSpeed = 10f;
 
+    [Header("Effects")]
+    public GameObject muzzleFlashPrefab; 
     private TowerData data;
     private float fireCooldown = 0f;
     private Transform currentTarget;
     private Transform partToRotate;
-
+    private Transform firePoint;
     private float currentDamage;
     private float currentRange;
     private float currentFireRate;
@@ -24,9 +26,10 @@ public class TowerController : MonoBehaviour
         currentFireRate = data.fireRate;
         currentSplashRadius = data.splashRadius;
     }
-    public void SetRotatingPart(Transform visualTransform)
+    public void SetVisualModelReferences(Transform rotatingPart, Transform foundFirePoint)
     {
-        partToRotate = visualTransform;
+        partToRotate = rotatingPart;
+        firePoint = foundFirePoint;
     }
 
     public void UpgradeStats(float dmgMult, float rangeMult, float speedMult)
@@ -34,12 +37,12 @@ public class TowerController : MonoBehaviour
         currentDamage *= dmgMult;
         currentRange *= rangeMult;
         currentFireRate *= speedMult;
-        Debug.Log($"Stats Upgraded! New Damage: {currentDamage}, New Range: {currentRange}");
     }
 
     void Update()
     {
         if (data == null) return;
+
         UpdateTarget();
 
         if (rotatesToTarget && currentTarget != null && partToRotate != null)
@@ -86,7 +89,8 @@ public class TowerController : MonoBehaviour
     void RotateTowardsTarget()
     {
         Vector3 direction = currentTarget.position - partToRotate.position;
-        direction.y = 0f; 
+        direction.y = 0f;
+
         if (direction.sqrMagnitude > 0.001f)
         {
             Quaternion lookRotation = Quaternion.LookRotation(direction);
@@ -96,6 +100,24 @@ public class TowerController : MonoBehaviour
 
     void ExecuteAttack(Transform target)
     {
+        PlayMuzzleFlash();
+        if (data.name.Contains("Crossbow") || data.name.Contains("Arrow"))
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.bowShootSound);
+        }
+        else if (data.appliesBurning || data.name.Contains("Fire"))
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.laserShootSound);
+        }
+        else
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.cannonShootSound);
+        }
+        if (data.slowsTarget)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.freezeSound);
+        }
+
         Enemy enemy = target.GetComponent<Enemy>();
         if (enemy == null) return;
 
@@ -114,6 +136,15 @@ public class TowerController : MonoBehaviour
         else
         {
             ApplyDamageAndEffects(enemy);
+        }
+    }
+
+    void PlayMuzzleFlash()
+    {
+        if (muzzleFlashPrefab != null && firePoint != null)
+        {
+            GameObject flash = Instantiate(muzzleFlashPrefab, firePoint.position, firePoint.rotation);
+            Destroy(flash, 1.5f);
         }
     }
 

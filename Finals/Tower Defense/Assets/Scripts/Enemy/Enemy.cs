@@ -16,6 +16,10 @@ public class Enemy : MonoBehaviour
     public float moveSpeed = 3.5f;
     public float flyingAltitude = 5f;
 
+    [Header("Burn Visual Effect")]
+    public GameObject burnEffectPrefab;
+    private GameObject activeBurnEffect;
+
     private NavMeshAgent agent;
     private Transform targetCore;
     private int waveNumber;
@@ -83,6 +87,8 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        CleanupBurnEffect();
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.enemyDeathSound);
         int reward = waveNumber * baseGoldDrop;
         GameManager.Instance.AddGold(reward);
         Destroy(gameObject);
@@ -90,6 +96,7 @@ public class Enemy : MonoBehaviour
 
     void ReachCore()
     {
+        CleanupBurnEffect();
         int damage = (enemyType == EnemyType.Boss) ? 3 : 1;
         GameManager.Instance.DamageCore(damage);
         Destroy(gameObject);
@@ -117,17 +124,33 @@ public class Enemy : MonoBehaviour
 
     public void ApplyBurn(float burnDamage, float duration)
     {
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.burnSound);
         StartCoroutine(BurnRoutine(burnDamage, duration));
     }
 
     IEnumerator BurnRoutine(float damagePerTick, float duration)
     {
+        if (burnEffectPrefab != null && activeBurnEffect == null)
+        {
+            activeBurnEffect = Instantiate(burnEffectPrefab, transform);
+            activeBurnEffect.transform.localPosition = Vector3.zero;
+        }
+
         float elapsed = 0f;
         while (elapsed < duration)
         {
             TakeDamage(damagePerTick);
             yield return new WaitForSeconds(1f);
             elapsed += 1f;
+        }
+        CleanupBurnEffect();
+    }
+
+    void CleanupBurnEffect()
+    {
+        if (activeBurnEffect != null)
+        {
+            Destroy(activeBurnEffect);
         }
     }
 }

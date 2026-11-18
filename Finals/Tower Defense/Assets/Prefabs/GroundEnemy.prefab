@@ -115,6 +115,7 @@ MonoBehaviour:
   baseGoldDrop: 10
   moveSpeed: 3.5
   flyingAltitude: 0
+  burnEffectPrefab: {fileID: 100002, guid: c91a2b2e5dd737a409575ca2bca3b80f, type: 3}
 --- !u!136 &-1777997441942923779
 CapsuleCollider:
   m_ObjectHideFlags: 0
