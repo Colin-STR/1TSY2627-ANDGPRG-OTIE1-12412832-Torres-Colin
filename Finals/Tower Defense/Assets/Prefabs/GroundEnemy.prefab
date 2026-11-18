@@ -110,9 +110,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   enemyType: 0
-  baseHp: 75
+  baseHp: 200
   currentHp: 0
-  baseGoldDrop: 10
+  baseGoldDrop: 50
   moveSpeed: 3.5
   flyingAltitude: 0
   burnEffectPrefab: {fileID: 100002, guid: c91a2b2e5dd737a409575ca2bca3b80f, type: 3}

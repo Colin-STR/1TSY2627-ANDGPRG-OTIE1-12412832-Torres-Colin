@@ -667,7 +667,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerGold: 500
-  coreHealth: 1
+  coreHealth: 5
   goldText: {fileID: 760920754}
   coreHealthText: {fileID: 575956986}
   defeatPanel: {fileID: 977136339}
